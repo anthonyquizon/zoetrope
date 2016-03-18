@@ -8,7 +8,7 @@
 
 (defn root [inputs state]
   {:dom [:h1 {} (str "hello world!! " (:x state))]
-   :model {:x (+ (:x state) 1) :y 1}})
+   :model {:x (get-in inputs [:window :dimensions :width]) :y 1}})
 
 (z/run-io
   root 

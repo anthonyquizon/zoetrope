@@ -2,6 +2,5 @@
     (:require))
 
 (defn dimensions []
-  (fn []
-    {:width (.-innerWidth js/window)
-     :height (.-innerHeight js/window)}))
+  {:width (.-innerWidth js/window)
+   :height (.-innerHeight js/window)})

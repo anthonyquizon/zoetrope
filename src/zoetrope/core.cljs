@@ -1,7 +1,6 @@
 (ns zoetrope.core
     (:require [zoetrope.output.dom :as dom]
-              [clojure.walk :as w]
-              [cljs.test :as t]))
+              [com.rpl.specter :as s]))
 
 (defonce id (atom nil))
 (defonce state (atom nil))
@@ -15,9 +14,8 @@
 (defn- apply-if [p f args]
   (if (p f) (apply f args) f))
 
-(defn- walk-apply [fs & args] ;;TODO move elsewhere?
-  (let [value-fn (fn [[k v]] [k (apply-if fn? v args)])]
-    (w/walk value-fn identity fs)))
+(defn- walk-apply [fs & args] 
+  (s/transform (s/walker fn?) #(apply % args) fs))
 
 (defn- step [f inputs state outputs]
   (let [in (walk-apply inputs)
@@ -33,3 +31,4 @@
 (defn run-io [f init-state inputs outputs]
   (reset! state init-state)
   (frame-loop #(step f inputs state outputs)))
+
