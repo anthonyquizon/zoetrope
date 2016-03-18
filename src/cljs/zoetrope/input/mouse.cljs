@@ -1,4 +1,0 @@
-(ns zoetrope.mouse
-    (:require))
-
-

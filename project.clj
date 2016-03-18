@@ -11,24 +11,19 @@
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-figwheel "0.5.0-2"]]
 
-  :source-paths ["src/cljs"]
-
   :aliases {"up" ["figwheel" "examples"]}
 
+  :source-paths  ["src/zoetrope"]
+
   :cljsbuild {:builds
-              ;;TODO test
               [{:id "examples"
-                :source-paths ["src/cljs"]
+                :source-paths ["src/zoetrope" "src/examples"]
                 :figwheel true
-                :compiler {:main zeotrope.core
-                           :asset-path "/js/compiled/out"
-                           :output-to "resources/public/js/compiled/zeotrope.js"
+                :compiler {:asset-path "js/compiled/out"
                            :output-dir "resources/public/js/compiled/out"
-                           :optimizations :none
-                           :source-map-timestamp true}}]}
+                           :source-map true
+                           :optimizations :none}}]}
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
-  :figwheel {:css-dirs ["resources/public/css"]
-             :ring-handler zoetrope.server/handler
-             :server-port 8881})
+  :figwheel {:server-port 8881})

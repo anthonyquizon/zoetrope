@@ -11,10 +11,6 @@
 (defn svg [properties children]
     [:svg (merge svg-ns properties) [children]])
 
-(defn translation [x y]
-    (str "translate(" x "px,"  y "px)"))
-
-;;TODO get data from database and realize properties
 (defn- vchild [child]
     (if (vector? child)
         (if (keyword? (first child))
@@ -27,10 +23,6 @@
           props' (clj->js props)
           nname' (name nnode)]
         (js/virtualDom.h nname' props' child')))
-
-(defn set-properties [& properies]
-    ;;TODO set event
-    (apply merge properties))
 
 (defn renderer []
     (dom/removeChildren root)
