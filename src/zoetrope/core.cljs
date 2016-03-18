@@ -1,6 +1,7 @@
 (ns zoetrope.core
     (:require [zoetrope.output.dom :as dom]
-              [clojure.walk :as w]))
+              [clojure.walk :as w]
+              [cljs.test :as t]))
 
 (defonce id (atom nil))
 (defonce state (atom nil))
@@ -11,31 +12,24 @@
     (when @id (.cancelAnimationFrame js/window @id))
     (reset! id (.requestAnimationFrame js/window f)))
 
-;; TODO rename renderers?
-(defn run-renderers [renderers state]
-  (doseq [r renderers] (r state)))
+(defn- apply-if [p f args]
+  (if (p f) (apply f args) f))
 
-(defn update-inputs [inputs]
-  (doseq [i inputs] (i)))
+(defn- walk-apply [fs & args] ;;TODO move elsewhere?
+  (let [value-fn (fn [[k v]] [k (apply-if fn? v args)])]
+    (w/walk value-fn identity fs)))
 
-(defn step [inputs state outputs]
-  (let [in (update-inputs inputs)
+(defn- step [f inputs state outputs]
+  (let [in (walk-apply inputs)
         out (f in @state)]
-    (run-renderers outputs out)
-    (reset! state out)))
+    (walk-apply outputs out)
+    (reset! state (:model out))))
 
-(defn frame-loop [f]
+(defn- frame-loop [f]
   (animate (fn tick [t]
              (f)
              (animate tick))))
 
-(defn init-io [fs]
-  (let [value-fn (fn [[k v]] [k (v)])]
-    (w/walk value-fn identity fs)))
-
-;;TODO rename outputs?
 (defn run-io [f init-state inputs outputs]
-  (let [inputs' (init-io inputs)
-        outputs' (init-io outputs)]
-    (reset! state init-state)
-    (frame-loop #(step inputs' state outputs'))))
+  (reset! state init-state)
+  (frame-loop #(step f inputs state outputs)))

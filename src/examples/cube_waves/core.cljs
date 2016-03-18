@@ -7,12 +7,13 @@
 (enable-console-print!)
 
 (defn root [inputs state]
-  {:dom [:h1 {} "hello world!"]})
+  {:dom [:h1 {} (str "hello world!! " (:x state))]
+   :model {:x (+ (:x state) 1) :y 1}})
 
-;(z/run-io
-  ;root 
-  ;{:x 0
-   ;:y 0}
-  ;{:window {:dimensions window/dimensions}
-   ;:mouse {:position mouse/position}}
-  ;{:dom dom/renderer})
+(z/run-io
+  root 
+  {:x 0
+   :y 0}
+  {:window {:dimensions window/dimensions}
+   :mouse {:position (mouse/position)}}
+  {:dom (dom/renderer)})
