@@ -19,8 +19,9 @@
   (dom/svg {:attributes {:width 500 :height 500}} circle))
   
 (defn root [inputs state]
+  {:dom (into [:div] (map (fn [x] [:h1 (str "number " x)]) (range 0 1000)))
   ;{:dom [:div {:style {:color "red"}} [:h1 {:style {:margin-top "20%" :font-size 70}} "hello!"]]}
-  {:dom [:div {:style {:color "red"}} [:h1 {:style {:margin-top "20%" :font-size 70}} "hello!"] [:h2 {:style {:color "blue"}} "World!"]]
+  ;{:dom [:div {:style {:color "red"}} [:h1 {:style {:margin-top "20%" :font-size 70}} "hello!"] [:h2 {:style {:color "blue"}} "World!"]]
   ;{:dom [:div "hello"] 
   ;{:dom [:div {:style {:width "20px" :height "20px" :background "red"}}] 
   ;{:dom [:div]

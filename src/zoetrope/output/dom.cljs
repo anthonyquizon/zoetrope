@@ -28,12 +28,15 @@
            :else                                    :no-match))) 
 
 (defn renderer []
-  (dom/removeChildren root)
-  (.appendChild (dom/getElement app-id) @root)
-  (fn [{:keys [dom]}]
-    (let [new-tree (vnode dom)
-          patches (js/virtualDom.diff @tree new-tree)]
-      (reset! tree new-tree)
-      (swap! root js/virtualDom.patch patches))))
+  (let [store (atom nil)]
+    (dom/removeChildren root)
+    (.appendChild (dom/getElement app-id) @root)
+    (fn [{:keys [dom]}]
+      (when (not= @store dom)
+        (let [new-tree (vnode dom)
+              patches (js/virtualDom.diff @tree new-tree)]
+          (reset! tree new-tree)
+          (reset! store dom)
+          (swap! root js/virtualDom.patch patches))))))
 
 

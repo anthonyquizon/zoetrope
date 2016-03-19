@@ -1,14 +1,3 @@
-# zoetrope
+# Zoetrope
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+A lightweight library for keeping IO at the edges of your apps browser GUI.
