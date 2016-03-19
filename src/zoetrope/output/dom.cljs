@@ -11,7 +11,7 @@
 (def svg-ns {:namespace "http://www.w3.org/2000/svg"})
 
 (defn svg [properties children]
-  [:svg (merge svg-ns properties) [children]])
+  [:svg (merge svg-ns properties) children])
 
 (defn vdom-h [tag attr child]
   (js/virtualDom.h (name tag) (clj->js attr) (clj->js child)))

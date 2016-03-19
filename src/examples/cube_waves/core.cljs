@@ -9,17 +9,23 @@
 (defn circle []
   [:circle 
    (merge dom/svg-ns 
-          {:attributes {:r 10} 
-           :style      {:stroke-width 5
-                        :fill "red"
-                        :stroke "black"}}
-          [])])
+          {:attributes {:r 100} 
+           :style      {:cx "500"
+                        :cy "500"
+                        :stroke-width 15
+                        :fill "none"
+                        :stroke "black"}})])
+         
 
 (defn svg []
-  (dom/svg {:attributes {:width 500 :height 500}} circle))
+  (dom/svg {:style {:position "absolute"
+                    :width "100%" 
+                    :height "100%"}}
+           (circle)))
   
 (defn root [inputs state]
-  {:dom (into [:div] (map (fn [x] [:h1 (str "number " x)]) (range 0 1000)))
+  ;{:dom (into [:div] (map (fn [x] [:h1 (str "number " x)]) (range 0 1000)))}
+  {:dom (svg)
   ;{:dom [:div {:style {:color "red"}} [:h1 {:style {:margin-top "20%" :font-size 70}} "hello!"]]}
   ;{:dom [:div {:style {:color "red"}} [:h1 {:style {:margin-top "20%" :font-size 70}} "hello!"] [:h2 {:style {:color "blue"}} "World!"]]
   ;{:dom [:div "hello"] 
