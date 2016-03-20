@@ -1,5 +1,6 @@
 (ns zoetrope.IO.dom
   (:require [goog.dom :as dom]
+            [goog.events :as events]
             [cljs.core.match :refer-macros [match]]
             [cljsjs.virtual-dom]))
 

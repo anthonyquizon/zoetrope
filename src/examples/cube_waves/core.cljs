@@ -2,7 +2,6 @@
   (:require [zoetrope.core :as z]
             [zoetrope.IO.model :as model]
             [zoetrope.IO.window :as window]
-            [zoetrope.IO.mouse :as mouse]
             [zoetrope.IO.dom :as dom]))
 
 (enable-console-print!)
@@ -37,7 +36,7 @@
 (z/run-io
   root 
   {:window {:dimensions window/dimensions}
-   :mouse {:position (mouse/position)}
+   :mouse {:position (window/mouse-position)}
    :model (model/input {:x 0 :y 0})}
   {:dom (dom/renderer)
    :model model/output})
