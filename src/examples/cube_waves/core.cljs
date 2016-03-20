@@ -15,7 +15,6 @@
                         :stroke-width 15
                         :fill "none"
                         :stroke "black"}})])
-         
 
 (defn svg [x y]
   (dom/svg {:style {:position "absolute"
