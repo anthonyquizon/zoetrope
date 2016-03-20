@@ -1,4 +1,4 @@
-(ns zoetrope.output.dom
+(ns zoetrope.IO.dom
   (:require [goog.dom :as dom]
             [cljs.core.match :refer-macros [match]]
             [cljsjs.virtual-dom]))
@@ -38,5 +38,4 @@
           (reset! tree new-tree)
           (reset! store dom)
           (swap! root js/virtualDom.patch patches))))))
-
 

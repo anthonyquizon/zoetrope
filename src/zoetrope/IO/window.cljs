@@ -1,4 +1,4 @@
-(ns zoetrope.input.window
+(ns zoetrope.IO.window
     (:require))
 
 (defn dimensions []

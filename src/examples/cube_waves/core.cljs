@@ -1,8 +1,9 @@
 (ns examples.cube-waves.core
   (:require [zoetrope.core :as z]
-            [zoetrope.input.window :as window]
-            [zoetrope.input.mouse :as mouse]
-            [zoetrope.output.dom :as dom]))
+            [zoetrope.IO.model :as model]
+            [zoetrope.IO.window :as window]
+            [zoetrope.IO.mouse :as mouse]
+            [zoetrope.IO.dom :as dom]))
 
 (enable-console-print!)
 
@@ -23,7 +24,7 @@
                     :height "100%"}}
            (circle)))
   
-(defn root [inputs state]
+(defn root [inputs]
   ;{:dom (into [:div] (map (fn [x] [:h1 (str "number " x)]) (range 0 1000)))}
   {:dom (svg)
   ;{:dom [:div {:style {:color "red"}} [:h1 {:style {:margin-top "20%" :font-size 70}} "hello!"]]}
@@ -35,8 +36,8 @@
 
 (z/run-io
   root 
-  {:x 0
-   :y 0}
   {:window {:dimensions window/dimensions}
-   :mouse {:position (mouse/position)}}
-  {:dom (dom/renderer)})
+   :mouse {:position (mouse/position)}
+   :model (model/input {:x 0 :y 0})}
+  {:dom (dom/renderer)
+   :model model/output})

@@ -1,4 +1,4 @@
-(ns zoetrope.input.mouse
+(ns zoetrope.IO.mouse
     (:require))
 
 (defn position []
