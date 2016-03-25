@@ -23,8 +23,8 @@
                     :height "100%"}}
            (circle x y)))
   
-(defn root [inputs]
-  (let [{:keys [x y]} (get-in inputs [:mouse :position])]
+(defn root [input]
+  (let [{:keys [x y]} (get-in input [:mouse :position])]
     {:dom (svg x y)})) 
 
 (z/run-io

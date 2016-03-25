@@ -9,10 +9,6 @@
 (defonce tree (atom (js/virtualDom.VText. "")))
 (defonce root (atom (js/virtualDom.create @tree)))
 (def app-id "app")
-(def svg-ns {:namespace "http://www.w3.org/2000/svg"})
-
-(defn svg [properties children]
-  [:svg (merge svg-ns properties) children])
 
 (defn vdom-h [tag attr child]
   (js/virtualDom.h (name tag) (clj->js attr) (clj->js child)))
@@ -28,7 +24,8 @@
            [a]                                      (vdom-h tag {} a)
            :else                                    :no-match))) 
 
-(defn renderer []
+;;TODO rename as output-renderer
+(defn renderer [] ;;TODO app-id
   (let [store (atom nil)]
     (dom/removeChildren root)
     (.appendChild (dom/getElement app-id) @root)
