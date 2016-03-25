@@ -8,16 +8,6 @@
 
 (enable-console-print!)
 
-(.log js/console (math/matrix [[1 1] [1 0]]))
-
-(defn view-matrix [width height]
-  (let [aspect-ratio (/ width height)
-        view-size 1 
-        x (/ (* aspect-ratio view-size) 2)
-        y (/ view-size 2)
-        z 1000]
-    (math/orthographic-matrix (- x) x y (- y) (- z) z))) 
-
 (defn point [x y]
   [:circle (merge dom/svg-ns 
                   {:attributes {:cx x 
@@ -34,15 +24,23 @@
 (defn shapes [input]
   (let [width  (get-in input [:window :width]) 
         height (get-in input [:window :height])
-        matrix (view-matrix width height)
-        p1 (math/vector [0 0 0 1])
-        p2 (math/vector [200 100 0 1])
-        p1' (.multiply js/math p1 matrix)
-        p2' (.multiply js/math p2 matrix)]
-    ;(print p2')
+        view-matrix (math/view-matrix width height)
+        model-matrix (math/look-at [0 0 0] [0 0 -10] [0 1 0])
+        matrix (math/mult4 view-matrix model-matrix)
+        p1 (math/vector -200 -200 0 1)
+        p2 (math/vector 200 -200 0 1)
+        p3 (math/vector 200 200 0 1)
+        p4 (math/vector -200 200 0 1)
+        p1' (math/transformMat4 p1 matrix)
+        p2' (math/transformMat4 p2 matrix)
+        p3' (math/transformMat4 p3 matrix)
+        p4' (math/transformMat4 p4 matrix)]
+
     (into (svg width height) 
-          [(point (math/index p1' 0) (math/index p1' 1))
-           (point (math/index p2' 0) (math/index p2' 1))])))
+          [(point (aget p1' 0) (aget p1' 1))
+           (point (aget p2' 0) (aget p2' 1))
+           (point (aget p3' 0) (aget p3' 1))
+           (point (aget p4' 0) (aget p4' 1))])))
   
           
 (defn root [input]

@@ -1,26 +1,33 @@
 (ns examples.math.core
   (:refer-clojure :exclude [vector]))
 
-(defn matrix [m]
-  (.matrix js/math (clj->js m)))
-
-(def vector matrix)
-
-(defn index [x n]
-  (let [i (.index js/math n)]
-    (.subset js/math x i)))
-
-;(defn vector [v]
-  ;(.transpose js/math (matrix v)))
+(defn vector [x y z w]
+  (.fromValues js/vec4 x y z w))
 
 (defn orthographic-matrix [left right top bottom near far]
-  (let [a  (/  2 (- right left))
-        b  (/  2 (- top bottom))
-        c  (/ -2 (- far near))
-        x1 (- (/ (+ right left) (- right left)))
-        x2 (- (/ (+ top bottom) (- top bottom)))
-        x3 (- (/ (+ far near)   (- far near)))]
-    (matrix [[a 0 0 x1]
-             [0 b 0 x2]
-             [0 0 c x3]
-             [0 0 0 1]])))
+  (let [m (.create js/mat4)]
+    (.ortho js/mat4 m left right bottom top near far)
+    m))
+
+(defn view-matrix [width height]
+  (let [aspect-ratio 1 ;;(/ width height) ;;TODO delete
+        view-size 10 
+        x (/ (* aspect-ratio view-size) 2)
+        y (/ view-size 2)
+        z 1000]
+    (orthographic-matrix (- x) x y (- y) (- z) z)))
+
+(defn look-at [eye center up]
+  (let [m (.create js/mat4)]
+    (.lookAt js/mat4 m (clj->js eye) (clj->js center) (clj->js up))
+    m))
+
+(defn transformMat4 [v m] ;;TODO multimethods on type
+  (let [v' (.create js/vec4)]
+    (.transformMat4 js/vec4 v' v m)
+    v'))
+
+(defn mult4 [a b] ;;TODO multimethod
+  (let [m (.create js/mat4)]
+    (.multiply js/mat4 m a b)
+    m))

@@ -1,12 +1,6 @@
 {
   "name": "zoetrope",
-  "version": "1.0.0",
-  "description": "A lightweight library for keeping IO at the edges of your apps browser GUI.",
-  "scripts": {
-    "setup": "echo 'TODO'"
-  },
   "dependencies": {
-    "gl-matrix": "^2.3.2",
-    "mathjs": "^3.1.0"
+    "gl-matrix": "^2.3.2"
   }
 }
