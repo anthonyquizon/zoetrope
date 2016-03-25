@@ -1,6 +1,9 @@
 (ns examples.math.core
   (:refer-clojure :exclude [vector]))
 
+(defn matrix []
+  (.create js/mat4))
+
 (defn vector [x y z w]
   (.fromValues js/vec4 x y z w))
 
@@ -31,3 +34,8 @@
   (let [m (.create js/mat4)]
     (.multiply js/mat4 m a b)
     m))
+
+(defn rotate [m rad axis]
+  (let [m' (.create js/mat4)]
+    (.rotate js/mat4 m' m rad (clj->js axis))
+    m'))

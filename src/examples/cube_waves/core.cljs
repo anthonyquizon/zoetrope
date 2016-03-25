@@ -24,9 +24,13 @@
 (defn shapes [input]
   (let [width  (get-in input [:window :width]) 
         height (get-in input [:window :height])
+        t      (get-in input [:model :t])
         view-matrix (math/view-matrix width height)
-        model-matrix (math/look-at [0 0 0] [0 0 -10] [0 1 0])
-        matrix (math/mult4 view-matrix model-matrix)
+        ;model-matrix (math/look-at [0 0 0] [0 0 -10] [0 1 0])
+        model-matrix (math/matrix)
+        rotated-model (math/rotate model-matrix (mod t (* (.-PI js/Math) 2)) [0 1 0])
+        matrix (math/mult4 view-matrix rotated-model)
+
         p1 (math/vector -200 -200 0 1)
         p2 (math/vector 200 -200 0 1)
         p3 (math/vector 200 200 0 1)
@@ -42,12 +46,17 @@
            (point (aget p3' 0) (aget p3' 1))
            (point (aget p4' 0) (aget p4' 1))])))
   
-          
+(defn timer [t]
+  (+ t 0.01))          
+
 (defn root [input]
-  {:dom (shapes input)}) 
+  {:dom (shapes input)
+   :model {:t (timer (get-in input [:model :t]))}})
 
 (z/run-io
   root 
   {:mouse {:position (io.window/mouse-position)}
-   :window io.window/dimensions}
-  {:dom (io.dom/renderer)})
+   :window io.window/dimensions
+   :model (io.model/input {:t 0})}
+  {:dom (io.dom/renderer)
+   :model io.model/output})
