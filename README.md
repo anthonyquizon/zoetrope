@@ -1,5 +1,5 @@
 # Zoetrope
 
-A small clojurescript library for coordinating UI state
+A small clojurescript library for managing UI state
 
 IO changes on Animation Frame
