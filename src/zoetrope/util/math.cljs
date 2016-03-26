@@ -1,4 +1,4 @@
-(ns examples.math.core
+(ns zoetrope.util.math
   (:refer-clojure :exclude [vector]))
 
 (defn matrix []
@@ -11,14 +11,6 @@
   (let [m (.create js/mat4)]
     (.ortho js/mat4 m left right bottom top near far)
     m))
-
-(defn view-matrix [width height]
-  (let [aspect-ratio 1 ;;(/ width height) ;;TODO delete
-        view-size 10 
-        x (/ (* aspect-ratio view-size) 2)
-        y (/ view-size 2)
-        z 1000]
-    (orthographic-matrix (- x) x y (- y) (- z) z)))
 
 (defn look-at [eye center up]
   (let [m (.create js/mat4)]
@@ -39,3 +31,11 @@
   (let [m' (.create js/mat4)]
     (.rotate js/mat4 m' m rad (clj->js axis))
     m'))
+
+(defn cube-points [n m o]
+  (flatten
+    (for [i (range n)]
+      (for [j (range m)]
+        (for [k (range o)]
+          (vector i j k 1))))))
+                     

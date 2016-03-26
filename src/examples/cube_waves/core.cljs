@@ -1,7 +1,7 @@
 (ns examples.cube-waves.core
-  (:require [examples.math.core :as math]
+  (:require [zoetrope.util.math :as math]
             [zoetrope.core :as z]
-            [zoetrope.dom :as dom]
+            [zoetrope.util.dom :as dom]
             [zoetrope.IO.model :as io.model]
             [zoetrope.IO.window :as io.window]
             [zoetrope.IO.dom :as io.dom]))
@@ -21,30 +21,24 @@
                     :width "100%" 
                     :height "100%"}}))
 
-(defn shapes [input]
-  (let [width  (get-in input [:window :width]) 
-        height (get-in input [:window :height])
-        t      (get-in input [:model :t])
-        view-matrix (math/view-matrix width height)
-        ;model-matrix (math/look-at [0 0 0] [0 0 -10] [0 1 0])
+;;create cube at 90 degrees
+
+;;TODO set waypoints using css - mathematical function
+;;TODO CSS 3d transforms
+(defn cubes [input]
+  (let [t (get-in input [:model :t])
+        cube (math/cube-points 2 1 1)
+        view-matrix (math/orthographic-matrix -0.01 0.01 0.01 -0.01 -10 10)
         model-matrix (math/matrix)
         rotated-model (math/rotate model-matrix (mod t (* (.-PI js/Math) 2)) [0 1 0])
-        matrix (math/mult4 view-matrix rotated-model)
+        matrix (math/mult4 view-matrix rotated-model)]
+    (map (fn [p] (let [p' (math/transformMat4 p matrix)]
+                   (point (aget p' 0) (aget p' 1)))) cube)))
 
-        p1 (math/vector -200 -200 0 1)
-        p2 (math/vector 200 -200 0 1)
-        p3 (math/vector 200 200 0 1)
-        p4 (math/vector -200 200 0 1)
-        p1' (math/transformMat4 p1 matrix)
-        p2' (math/transformMat4 p2 matrix)
-        p3' (math/transformMat4 p3 matrix)
-        p4' (math/transformMat4 p4 matrix)]
-
-    (into (svg width height) 
-          [(point (aget p1' 0) (aget p1' 1))
-           (point (aget p2' 0) (aget p2' 1))
-           (point (aget p3' 0) (aget p3' 1))
-           (point (aget p4' 0) (aget p4' 1))])))
+(defn shapes [input]
+  (let [width  (get-in input [:window :width]) 
+        height (get-in input [:window :height])]
+    (into (svg width height) (cubes input)))) 
   
 (defn timer [t]
   (+ t 0.01))          
