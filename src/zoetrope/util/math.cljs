@@ -4,8 +4,9 @@
 (defn matrix []
   (.create js/mat4))
 
-(defn vector [x y z w]
-  (.fromValues js/vec4 x y z w))
+(defn vector 
+  ([[x y z w]] (vector x y z w))
+  ([x y z w] (.fromValues js/vec4 x y z w)))
 
 (defn orthographic-matrix [left right top bottom near far]
   (let [m (.create js/mat4)]

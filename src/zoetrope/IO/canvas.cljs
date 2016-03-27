@@ -1,9 +1,8 @@
 (ns zoetrope.IO.canvas
   (:require [zoetrope.IO.impl.virtual :as v]
+            [zoetrope.util.math :as math]
             [goog.dom :as dom])) 
 
-;; nesting terminal tags are the same as having them as siblings
-;;TODO build up functions and execute in order
 (defn format-tree [tag attr children]
   {:tag tag :attr attr :children children})
 
@@ -11,31 +10,54 @@
   (when fill (aset context "fillStyle" fill))
   (when stroke (aset context "strokeStyle" stroke)))
   
-(defn rectangle [context {:keys [x y width height fill stroke]}] ;;TODO left right?
-  (set-style context fill stroke)
-  (when fill (.fillRect context x y width height))
-  (when stroke (.strokeRect context x y width height)))
+(defn transform-vector [v m] ;;TODO move this
+  (let [v' (-> v math/vector (math/transformMat4 m))]
+    [(aget v' 0) (aget v' 1)]))
 
-(defn circle [context {:keys [x y radius fill stroke]}]
-  (set-style context fill stroke)
-  (.beginPath context)
-  (.arc context x y radius 0 (* 2 (.-PI js/Math)))
-  (when fill (.fill context))
-  (when stroke (.stroke context))
-  (.closePath context))
+(defmulti render-tag (fn [_ _ tag _] tag))
 
-(defn orthographic-transform [])
+(defmethod render-tag :default [_ _ _]) 
 
-(defn render [context {:keys [tag attr children]}]
-  (case tag
-    :rectangle (rectangle context attr)
-    :circle (circle context attr)
-    :default)
-  (doseq [child children] 
-    (render context child)))
-  
+;;stubs TODO
+(defmethod render-tag :sphere [_ _ _]) 
+(defmethod render-tag :cube [_ _ _]) 
+
+(defmethod render-tag :rectangle 
+  [context matrix _ {:keys [origin width height fill stroke]}]  ;;TODO default coords - z = 0
+  (let [[x y] (transform-vector origin matrix)]
+    (set-style context fill stroke)
+    (when fill (.fillRect context x y width height))
+    (when stroke (.strokeRect context x y width height))))
+
+(defmethod render-tag :circle
+  [context matrix _ {:keys [origin radius fill stroke]}]
+  (let [[x y] (transform-vector origin matrix)]
+    (set-style context fill stroke)
+    (.beginPath context)
+    (.arc context x y radius 0 (* 2 (.-PI js/Math)))
+    (when fill (.fill context))
+    (when stroke (.stroke context))
+    (.closePath context)))
+
+(defmethod render-tag :orthographic
+  [context matrix _ {:keys [left right top bottom near far]}]
+  (let [matrix' (math/orthographic-matrix left right top bottom near far)]
+    (math/mult4 matrix' matrix)))
+
+(defmethod render-tag :rotate
+  [context matrix _ {:keys [radians axis]}]
+  (math/rotate matrix radians axis))
+
+(defn render 
+  ([context node] (render context (math/matrix) node))
+  ([context matrix {:keys [tag attr children]}]
+   (let [output (render-tag context matrix tag attr)
+         matrix' (if output output matrix)]
+     (doseq [child children] 
+       (render context matrix' child)))))
+
 (defn clear-canvas [elem context colour width height]
-  (rectangle context {:x 0 :y 0 :width width :height height :fill colour}))
+  (render-tag context (math/matrix) :rectangle {:x 0 :y 0 :width width :height height :fill colour}))
 
 (defn renderer 
   ([canvas-id] (renderer canvas-id {:clear-colour "white"}))

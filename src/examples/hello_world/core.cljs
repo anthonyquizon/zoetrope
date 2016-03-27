@@ -37,8 +37,8 @@
         ;height (get-in input [:window :height])]
     ;(into (svg width height) (cubes input)))) 
   
-;(defn timer [t]
-  ;(+ t 0.01))          
+(defn timer [t]
+  (+ t 0.01))          
 
 ;(defn root [input]
   ;{:dom (shapes input)
@@ -52,12 +52,22 @@
   ;{:dom (io.dom/renderer)
    ;:model io.model/output})
 
-(defn rectangle [{:keys [window]}]
-  [:orthographic {:left 0 :right 0 :top 0 :bottom 0 :near 0 :far 0}
-   [:transform {:matrix []}
-    [:rectangle {:x 500 :y 400 :width 200 :height 200 :fill "black"}]] 
-   [:transform {:matrix []}
-    [:circle {:x 200 :y 200 :radius 100 :fill "red"}]]]) 
+;;TODO x y z as array?
+(defn orthographic-matrix [width height]
+  (let [aspect-ratio (/ width height)
+        view-size 1]
+    [:orthographic]))
+
+(defn rectangle [{:keys [window model]}]
+  (let [t (:t model)]
+    [:orthographic {:left -1 :right 1 :top 1 :bottom -1 :near -10 :far 10}
+     [:transform {:matrix []}
+      [:rectangle {:origin [500 400 100 1] :width 200 :height 200 :fill "black"}]] ;;TODO x y z
+     [:rotate {:radians t :axis [0 1 0]}
+      [:circle {:origin [400 300 0 1] :radius 100 :fill "red"}] 
+      [:circle {:origin [600 300 0 1] :radius 100 :fill "red"}] 
+      [:circle {:origin [600 500 0 1] :radius 100 :fill "red"}] 
+      [:circle {:origin [400 500 0 1] :radius 100 :fill "red"}]]])) 
 
 (defn canvas [{:keys [window]}]
   [:canvas {:id "canvas" 
@@ -67,7 +77,7 @@
 (defn root [input]
   {:dom (canvas input)
    :canvas (rectangle input)
-   :model {:t 0}})
+   :model {:t (timer (get-in input [:model :t]))}})
 
 (z/run-io
   root 
