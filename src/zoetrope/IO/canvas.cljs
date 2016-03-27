@@ -48,6 +48,10 @@
   [context matrix _ {:keys [radians axis]}]
   (math/rotate matrix radians axis))
 
+(defmethod render-tag :translate
+  [context matrix _ {:keys [vector]}]
+  (math/translate matrix vector))
+
 (defn render 
   ([context node] (render context (math/matrix) node))
   ([context matrix {:keys [tag attr children]}]

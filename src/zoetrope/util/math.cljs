@@ -33,6 +33,11 @@
     (.rotate js/mat4 m' m rad (clj->js axis))
     m'))
 
+(defn translate [m v]
+  (let [m' (.create js/mat4)]
+    (.translate js/mat4 m' m (clj->js v))
+    m'))
+
 (defn cube-points [n m o]
   (flatten
     (for [i (range n)]

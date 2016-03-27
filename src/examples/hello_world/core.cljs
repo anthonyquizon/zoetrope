@@ -63,11 +63,12 @@
     [:orthographic {:left -1 :right 1 :top 1 :bottom -1 :near -10 :far 10}
      [:transform {:matrix []}
       [:rectangle {:origin [500 400 100 1] :width 200 :height 200 :fill "black"}]] ;;TODO x y z
-     [:rotate {:radians t :axis [0 1 0]}
-      [:circle {:origin [400 300 0 1] :radius 100 :fill "red"}] 
-      [:circle {:origin [600 300 0 1] :radius 100 :fill "red"}] 
-      [:circle {:origin [600 500 0 1] :radius 100 :fill "red"}] 
-      [:circle {:origin [400 500 0 1] :radius 100 :fill "red"}]]])) 
+     [:translate {:vector [300 300 0]}
+       [:rotate {:radians t :axis [0 1 0]}
+        [:circle {:origin [100 100 0 1] :radius 10 :fill "red"}] 
+        [:circle {:origin [100 -100 0 1] :radius 10 :fill "red"}] 
+        [:circle {:origin [-100 100 0 1] :radius 10 :fill "red"}] 
+        [:circle {:origin [-100 -100 0 1] :radius 10 :fill "red"}]]]])) 
 
 (defn canvas [{:keys [window]}]
   [:canvas {:id "canvas" 
