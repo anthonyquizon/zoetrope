@@ -6,21 +6,20 @@
 
 (defonce tree (atom (js/virtualDom.VText. "")))
 (defonce root (atom (js/virtualDom.create @tree)))
-(def app-id "app")
 
 (defn vdom-h [tag attr child]
   (js/virtualDom.h (name tag) (clj->js attr) (clj->js child)))
  
 ;;TODO rename as output-renderer
-(defn renderer [] ;;TODO app-id
+(defn renderer [dom-id]
   (let [store (atom nil)]
     (dom/removeChildren root)
-    (.appendChild (dom/getElement app-id) @root)
+    (.appendChild (dom/getElement dom-id) @root)
     (fn [{:keys [dom]}]
       (when (not= @store dom)
         (let [new-tree (v/render vdom-h dom)
               patches (js/virtualDom.diff @tree new-tree)]
-          (reset! tree new-tree)
+          (reset! tree new-tree) 
           (reset! store dom)
           (swap! root js/virtualDom.patch patches))))))
 

@@ -2,7 +2,7 @@
   (:require [cljs.core.match :refer-macros [match]]))
 
 ;;TODO thread state?
-(defn render [f [tag & body]]
+(defn render [f [tag & body]] 
   (let [render-child #(map (partial render f) %)]
     (match (vec body)
            []                                       (f tag {} [])
