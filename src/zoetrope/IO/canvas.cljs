@@ -2,10 +2,6 @@
   (:require [zoetrope.IO.impl.virtual :as v]
             [goog.dom :as dom])) 
 
-;; clear canvas
-;; walk through each item
-  ;; render
-
 ;; nesting terminal tags are the same as having them as siblings
 ;;TODO build up functions and execute in order
 (defn format-tree [tag attr children]
@@ -36,23 +32,25 @@
   (doseq [child children] 
     (render context child)))
   
-(defn clear-canvas [elem context colour]
-  (let [width (.-width elem)
-        height (.-height elem)]
-    (rectangle context {:x 0 :y 0 :width width :height height :fill colour})))
+(defn clear-canvas [elem context colour width height]
+  (rectangle context {:x 0 :y 0 :width width :height height :fill colour}))
 
-;;TODO clear colour
 (defn renderer 
   ([canvas-id] (renderer canvas-id {:clear-colour "white"}))
   ([canvas-id {:keys [clear-colour]}]
-   (let [store (atom nil)]
+   (let [store (atom nil)
+         width (atom nil)
+         height (atom nil)]
      (fn [{:keys [canvas]}]
-       (let [elem (dom/getElement canvas-id)]
-         (when (and (not= @store canvas) elem)
+       (let [elem (dom/getElement canvas-id) ;;TODO check if canvas exists
+             width' (.-width elem) 
+             height' (.-height elem)] 
+         (when (and (not= @store canvas) (not= width width') (not= height height'))
            (let [context (.getContext elem "2d")
                  tree (v/render format-tree canvas)]
-             (print tree)
-             (clear-canvas elem context clear-colour)
+             (clear-canvas elem context clear-colour width' height')
              (render context tree)
-             (reset! store canvas))))))))
+             (reset! store canvas)
+             (reset! store width width')
+             (reset! store height height'))))))))
 

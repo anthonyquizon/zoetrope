@@ -53,10 +53,10 @@
    ;:model io.model/output})
 
 (defn rectangle [{:keys [window]}]
-  [:transform {:matrix []}
+  [:orthographic {:left 0 :right 0 :top 0 :bottom 0 :near 0 :far 0}
    [:transform {:matrix []}
     [:rectangle {:x 500 :y 400 :width 200 :height 200 :fill "black"}]] 
-   [:tansform {:matrix []}
+   [:transform {:matrix []}
     [:circle {:x 200 :y 200 :radius 100 :fill "red"}]]]) 
 
 (defn canvas [{:keys [window]}]
