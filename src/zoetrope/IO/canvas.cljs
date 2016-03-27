@@ -24,6 +24,8 @@
   (when stroke (.stroke context))
   (.closePath context))
 
+(defn orthographic-transform [])
+
 (defn render [context {:keys [tag attr children]}]
   (case tag
     :rectangle (rectangle context attr)
@@ -42,15 +44,18 @@
          width (atom nil)
          height (atom nil)]
      (fn [{:keys [canvas]}]
-       (let [elem (dom/getElement canvas-id) ;;TODO check if canvas exists
-             width' (.-width elem) 
-             height' (.-height elem)] 
-         (when (and (not= @store canvas) (not= width width') (not= height height'))
-           (let [context (.getContext elem "2d")
-                 tree (v/render format-tree canvas)]
-             (clear-canvas elem context clear-colour width' height')
-             (render context tree)
-             (reset! store canvas)
-             (reset! store width width')
-             (reset! store height height'))))))))
+       (when-let [elem (dom/getElement canvas-id)] ;;TODO check if canvas exists
+             (let [context (.getContext elem "2d")
+                   width' (.-width elem) 
+                   height' (.-height elem)] 
+               (when (or (not= @store canvas) 
+                         (not= @width width') 
+                         (not= @height height'))
+                 (let [tree (v/render format-tree canvas)]
+                   (clear-canvas elem context clear-colour width' height')
+                   (render context tree)
+
+                   (reset! store canvas)
+                   (reset! width width')
+                   (reset! height height')))))))))
 
