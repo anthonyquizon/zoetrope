@@ -65,10 +65,11 @@
       [:rectangle {:origin [500 400 100 1] :width 200 :height 200 :fill "black"}]] ;;TODO x y z
      [:translate {:vector [300 300 0]}
        [:rotate {:radians t :axis [0 1 0]}
-        [:circle {:origin [100 100 0 1] :radius 10 :fill "red"}] 
-        [:circle {:origin [100 -100 0 1] :radius 10 :fill "red"}] 
-        [:circle {:origin [-100 100 0 1] :radius 10 :fill "red"}] 
-        [:circle {:origin [-100 -100 0 1] :radius 10 :fill "red"}]]]])) 
+         [:scale {:vector [1 1 1]}
+          [:circle {:origin [100 100 0 1] :radius 10 :fill "red"}] 
+          [:circle {:origin [100 -100 0 1] :radius 10 :fill "red"}] 
+          [:circle {:origin [-100 100 0 1] :radius 10 :fill "red"}] 
+          [:circle {:origin [-100 -100 0 1] :radius 10 :fill "red"}]]]]])) 
 
 (defn canvas [{:keys [window]}]
   [:canvas {:id "canvas" 

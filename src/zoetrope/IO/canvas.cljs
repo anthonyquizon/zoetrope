@@ -52,6 +52,10 @@
   [context matrix _ {:keys [vector]}]
   (math/translate matrix vector))
 
+(defmethod render-tag :scale
+  [context matrix _ {:keys [vector]}]
+  (math/scale matrix vector))
+
 (defn render 
   ([context node] (render context (math/matrix) node))
   ([context matrix {:keys [tag attr children]}]

@@ -38,6 +38,11 @@
     (.translate js/mat4 m' m (clj->js v))
     m'))
 
+(defn scale [m v]
+  (let [m' (.create js/mat4)]
+    (.scale js/mat4 m' m (clj->js v))
+    m'))
+
 (defn cube-points [n m o]
   (flatten
     (for [i (range n)]
