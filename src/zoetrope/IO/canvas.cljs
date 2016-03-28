@@ -44,7 +44,7 @@
   (let [matrix' (math/orthographic-matrix left right top bottom near far)]
     (math/mult4 matrix' matrix)))
 
-(defmethod render-tag :rotate
+(defmethod render-tag :rotate ;;TODO change method type
   [context matrix _ {:keys [radians axis]}]
   (math/rotate matrix radians axis))
 
