@@ -1,8 +1,11 @@
 (ns zoetrope.core
     (:require [com.rpl.specter :as s]))
 
+;;TODO cross compile this
+
 (defonce id (atom nil))
 
+;;TODO platform independant interop of animation frame
 (defn- animate
     "Call f on the next animation frame."
     [f]

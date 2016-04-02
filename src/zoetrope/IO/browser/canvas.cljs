@@ -19,25 +19,32 @@
 (defmethod render-tag :default [_ _ _]) 
 
 ;;stubs TODO
-(defmethod render-tag :sphere [_ _ _]) 
 (defmethod render-tag :cube [_ _ _]) 
 
 (defmethod render-tag :rectangle 
   [context matrix _ {:keys [origin width height fill stroke]}]  ;;TODO default coords - z = 0
   (let [[x y] (transform-vector origin matrix)]
+    ;;TODO rounded corners
     (set-style context fill stroke)
     (when fill (.fillRect context x y width height))
     (when stroke (.strokeRect context x y width height))))
 
 (defmethod render-tag :circle
-  [context matrix _ {:keys [origin radius fill stroke]}]
+  [context matrix _ attr]
+  (let [PI-2 (* 2 (.-PI js/Math)) 
+        attr' (assoc attr :start-angle 0 :end-angle PI-2)]
+    (render-tag context matrix :arc attr')))
+
+(defmethod render-tag :arc
+  [context matrix _ {:keys [origin radius start-angle end-angle fill stroke]}]
   (let [[x y] (transform-vector origin matrix)]
     (set-style context fill stroke)
     (.beginPath context)
-    (.arc context x y radius 0 (* 2 (.-PI js/Math)))
+    (.arc context x y radius start-angle end-angle)
     (when fill (.fill context))
     (when stroke (.stroke context))
     (.closePath context)))
+
 
 (defmethod render-tag :orthographic
   [context matrix _ {:keys [left right top bottom near far]}]
