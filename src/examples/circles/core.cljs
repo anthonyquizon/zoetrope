@@ -11,7 +11,7 @@
 (defn canvas [{:keys [window]}]
   [:orthographic {:left -1 :right 1 :top 1 :bottom -1 :near -100 :far 100}
    [:translate {:vector [(-> window :width (/ 2)) (-> window :height (/ 2)) 0]}
-    [:arc {:origin [-100 -100 0] :radius 100 :start-angle 0 :end-angle (.-PI js/Math) :fill "black"}]]])
+    [:arc {:origin [-100 -100 0] :radius 100 :start-angle 0 :end-angle (/ (.-PI js/Math) 2) :stroke "black"}]]])
 
 (defn dom [{:keys [window]}]
   [:canvas {:id "canvas" 

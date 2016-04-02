@@ -14,29 +14,29 @@
   (let [v' (-> (conj v 1) math/vector (math/transformMat4 m))]
     [(aget v' 0) (aget v' 1)]))
 
-(defmulti render-tag (fn [_ _ tag _] tag))
 
-(defmethod render-tag :default [_ _ _]) 
+(defmulti draw (fn [tag _ _ _] tag))
 
-;;stubs TODO
-(defmethod render-tag :cube [_ _ _]) 
+(defmethod draw :default [_ _ _ _]) 
+ 
+;(defmethod draw :cube [_ _ _]) 
 
-(defmethod render-tag :rectangle 
-  [context matrix _ {:keys [origin width height fill stroke]}]  ;;TODO default coords - z = 0
+(defmethod draw :rectangle 
+  [_ context matrix {:keys [origin width height fill stroke]}]  ;;TODO default coords - z = 0
   (let [[x y] (transform-vector origin matrix)]
     ;;TODO rounded corners
     (set-style context fill stroke)
     (when fill (.fillRect context x y width height))
     (when stroke (.strokeRect context x y width height))))
 
-(defmethod render-tag :circle
-  [context matrix _ attr]
+(defmethod draw :circle
+  [_ context matrix attr]
   (let [PI-2 (* 2 (.-PI js/Math)) 
         attr' (assoc attr :start-angle 0 :end-angle PI-2)]
-    (render-tag context matrix :arc attr')))
+    (draw :arc context matrix attr')))
 
-(defmethod render-tag :arc
-  [context matrix _ {:keys [origin radius start-angle end-angle fill stroke]}]
+(defmethod draw :arc
+  [_ context matrix {:keys [origin radius start-angle end-angle fill stroke]}]
   (let [[x y] (transform-vector origin matrix)]
     (set-style context fill stroke)
     (.beginPath context)
@@ -46,33 +46,34 @@
     (.closePath context)))
 
 
-(defmethod render-tag :orthographic
-  [context matrix _ {:keys [left right top bottom near far]}]
+(defmulti transform (fn [tag _ _] tag))
+
+(defmethod transform :default [_ matrix _] matrix) 
+
+(defmethod transform :orthographic [_ matrix {:keys [left right top bottom near far]}]
   (let [matrix' (math/orthographic-matrix left right top bottom near far)]
     (math/mult4 matrix' matrix)))
 
-(defmethod render-tag :rotate ;;TODO change method type
-  [context matrix _ {:keys [radians axis]}]
-  (math/rotate matrix radians axis))
+(defmethod transform :scale [_ matrix {:keys [vector]}] 
+  (math/scale matrix vector))
 
-(defmethod render-tag :translate
-  [context matrix _ {:keys [vector]}]
+(defmethod transform :translate [_ matrix {:keys [vector]}] 
   (math/translate matrix vector))
 
-(defmethod render-tag :scale
-  [context matrix _ {:keys [vector]}]
-  (math/scale matrix vector))
+(defmethod transform :rotate [_ matrix {:keys [radians axis]}] 
+  (math/rotate matrix radians axis))
+
 
 (defn render 
   ([context node] (render context (math/matrix) node))
   ([context matrix {:keys [tag attr children]}]
-   (let [output (render-tag context matrix tag attr)
-         matrix' (if output output matrix)]
+   (let [matrix' (transform tag matrix attr)]
+     (draw tag context matrix' attr)
      (doseq [child children] 
        (render context matrix' child)))))
 
 (defn clear-canvas [elem context colour width height]
-  (render-tag context (math/matrix) :rectangle {:origin [0 0 0 1] :width width :height height :fill colour}))
+  (draw :rectangle context (math/matrix) {:origin [0 0 0 1] :width width :height height :fill colour}))
 
 (defn renderer 
   ([canvas-id] (renderer canvas-id {:clear-colour "white"}))
