@@ -6,9 +6,22 @@
 (defn format-tree [tag attr children]
   {:tag tag :attr attr :children children})
 
-(defn set-style [context fill stroke] 
-  (when fill (aset context "fillStyle" fill))
-  (when stroke (aset context "strokeStyle" stroke)))
+;;TODO split into smaller functions 
+(defn set-style 
+  [context {:keys [fill-fn stroke-fn]} {:keys [fill stroke line-width]}] 
+  (let [line-width' (if line-width line-width 1)]
+      
+    (when fill 
+      (aset context "fillStyle" fill)
+      (fill-fn))
+    
+    ;;TODO line caps
+
+    (aset context "lineWidth" line-width)
+
+    (when stroke 
+      (aset context "strokeStyle" stroke)
+      (stroke-fn))))
   
 (defn transform-vector [v m] ;;TODO move this
   (let [v' (-> (conj v 1) math/vector (math/transformMat4 m))]
@@ -22,28 +35,35 @@
 ;(defmethod draw :cube [_ _ _]) 
 
 (defmethod draw :rectangle 
-  [_ context matrix {:keys [origin width height fill stroke]}]  ;;TODO default coords - z = 0
+  [_ context matrix {:keys [origin width height] :as attr}]  ;;TODO default coords - z = 0
   (let [[x y] (transform-vector origin matrix)]
     ;;TODO rounded corners
-    (set-style context fill stroke)
-    (when fill (.fillRect context x y width height))
-    (when stroke (.strokeRect context x y width height))))
+    (set-style context 
+               {:fill-fn #(.fillRect context x y width height)
+                :stroke-fn #(.strokeRect context x y width height)}
+               attr)))
 
 (defmethod draw :circle
-  [_ context matrix attr]
-  (let [PI-2 (* 2 (.-PI js/Math)) 
-        attr' (assoc attr :start-angle 0 :end-angle PI-2)]
-    (draw :arc context matrix attr')))
+  [_ context matrix {:keys [origin radius start-angle end-angle] :as attr}]
+  (let [start-angle' (if start-angle start-angle 0)
+        end-angle' (if end-angle end-angle math/PI-double)
+        [x y] (transform-vector origin matrix)]
 
-(defmethod draw :arc
-  [_ context matrix {:keys [origin radius start-angle end-angle fill stroke]}]
-  (let [[x y] (transform-vector origin matrix)]
-    (set-style context fill stroke)
     (.beginPath context)
-    (.arc context x y radius start-angle end-angle)
-    (when fill (.fill context))
-    (when stroke (.stroke context))
-    (.closePath context)))
+
+    (when (not= end-angle' math/PI-double)
+      (.lineTo context x y))
+    
+    (.arc context x y radius start-angle' end-angle')
+
+    (when (not= end-angle' math/PI-double)
+      (.lineTo context x y))
+
+    (.closePath context)
+    
+    (set-style context {:fill-fn #(.fill context)
+                        :stroke-fn #(.stroke context)}
+               attr)))
 
 
 (defmulti transform (fn [tag _ _] tag))

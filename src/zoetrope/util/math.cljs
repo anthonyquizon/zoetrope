@@ -50,3 +50,6 @@
         (for [k (range o)]
           (vector i j k 1))))))
                      
+(def PI (.-PI js/Math))
+(def PI-double (* 2 PI))
+(def PI-half (/ 2 PI))
