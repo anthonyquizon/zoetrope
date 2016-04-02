@@ -1,4 +1,4 @@
-(ns zoetrope.IO.canvas
+(ns zoetrope.IO.browser.canvas
   (:require [zoetrope.IO.impl.virtual :as v]
             [zoetrope.util.math :as math]
             [goog.dom :as dom])) 
@@ -11,7 +11,7 @@
   (when stroke (aset context "strokeStyle" stroke)))
   
 (defn transform-vector [v m] ;;TODO move this
-  (let [v' (-> v math/vector (math/transformMat4 m))]
+  (let [v' (-> (conj v 1) math/vector (math/transformMat4 m))]
     [(aget v' 0) (aget v' 1)]))
 
 (defmulti render-tag (fn [_ _ tag _] tag))
@@ -65,7 +65,7 @@
        (render context matrix' child)))))
 
 (defn clear-canvas [elem context colour width height]
-  (render-tag context (math/matrix) :rectangle {:x 0 :y 0 :width width :height height :fill colour}))
+  (render-tag context (math/matrix) :rectangle {:origin [0 0 0 1] :width width :height height :fill colour}))
 
 (defn renderer 
   ([canvas-id] (renderer canvas-id {:clear-colour "white"}))

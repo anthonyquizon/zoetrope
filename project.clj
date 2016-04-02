@@ -2,10 +2,11 @@
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "" :url ""}
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.170"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.8.40"]
                  [org.clojure/test.check "0.9.0"]
                  [org.clojure/core.match "0.3.0-alpha4"]
+                 [org.clojure/core.typed "0.3.22"]
                  [com.rpl/specter "0.9.2"]
                  [cljsjs/wad "2.2.3-0"]
                  [cljsjs/virtual-dom "2.1.1-0"]]

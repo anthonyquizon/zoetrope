@@ -1,4 +1,4 @@
-(ns zoetrope.IO.window
+(ns zoetrope.IO.browser.window
     (:require [goog.events :as events]))
 
 (events/removeAll js/window)

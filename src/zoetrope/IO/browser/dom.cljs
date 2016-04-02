@@ -1,4 +1,4 @@
-(ns zoetrope.IO.dom
+(ns zoetrope.IO.browser.dom
   (:require [goog.dom :as dom]
             [goog.events :as events]
             [zoetrope.IO.impl.virtual :as v]

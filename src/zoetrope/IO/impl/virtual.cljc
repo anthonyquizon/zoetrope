@@ -1,7 +1,7 @@
 (ns zoetrope.IO.impl.virtual
-  (:require [cljs.core.match :refer-macros [match]]))
+  #?(:clj  (:require [clojure.core.match :refer [match]]))
+  #?(:cljs (:require [cljs.core.match :refer-macros [match]])))
 
-;;TODO thread state?
 (defn render [f [tag & body]] 
   (let [render-child #(map (partial render f) %)]
     (match (vec body)
@@ -12,4 +12,3 @@
            [(a :guard vector?) & b]                 (f tag {} (render-child (cons a b)))
            [a]                                      (f tag {} a)
            :else                                    :no-match))) 
-

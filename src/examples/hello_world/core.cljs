@@ -1,11 +1,10 @@
 (ns examples.hello-world.core
-  (:require [zoetrope.util.math :as math]
-            [zoetrope.core :as z]
+  (:require [zoetrope.core :as z]
             [zoetrope.util.dom :as dom]
             [zoetrope.IO.model :as io.model]
-            [zoetrope.IO.window :as io.window]
-            [zoetrope.IO.dom :as io.dom]
-            [zoetrope.IO.canvas :as io.canvas]))
+            [zoetrope.IO.browser.window :as io.window]
+            [zoetrope.IO.browser.dom :as io.dom]
+            [zoetrope.IO.browser.canvas :as io.canvas]))
 
 (enable-console-print!)
   
@@ -18,14 +17,14 @@
         height (:height window)]
       [:orthographic {:left -1 :right 1 :top 1 :bottom -1 :near -100 :far 100}
        [:translate {:vector [(/ width 2) (/ height 2) 0]}
-        [:rectangle {:origin [-100 -100 0 1] :width 200 :height 200 :fill "black"}] ;;TODO x y z
+        [:rectangle {:origin [-100 -100 0] :width 200 :height 200 :fill "black"}] ;;TODO x y z
         [:translate {:vector [0 0 0]}
          [:rotate {:radians t :axis [0 1 0]}
           [:scale {:vector [1 1 1]}
-           [:circle {:origin [100 100 0 1] :radius 10 :fill "red"}] 
-           [:circle {:origin [100 -100 0 1] :radius 10 :fill "red"}] 
-           [:circle {:origin [-100 100 0 1] :radius 10 :fill "red"}] 
-           [:circle {:origin [-100 -100 0 1] :radius 10 :fill "red"}]]]]]])) 
+           [:circle {:origin [100 100 0] :radius 10 :fill "red"}] 
+           [:circle {:origin [100 -100 0] :radius 10 :fill "red"}] 
+           [:circle {:origin [-100 100 0] :radius 10 :fill "red"}] 
+           [:circle {:origin [-100 -100 0] :radius 10 :fill "red"}]]]]]])) 
 
 (defn canvas [{:keys [window]}]
   [:canvas {:id "canvas" 
