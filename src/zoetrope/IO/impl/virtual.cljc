@@ -1,4 +1,4 @@
-(ns zoetrope.IO.impl.virtual
+(ns zoetrope.IO.impl.virtual ;;TODO remove from impl
   #?(:clj  (:require [clojure.core.match :refer [match]]))
   #?(:cljs (:require [cljs.core.match :refer-macros [match]])))
 

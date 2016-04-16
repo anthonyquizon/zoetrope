@@ -90,6 +90,7 @@
    (let [matrix' (transform tag matrix attr)]
      (draw tag context matrix' attr)
      (doseq [child children] 
+       ;(print (first child))
        (render context matrix' child)))))
 
 (defn clear-canvas [elem context colour width height]

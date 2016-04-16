@@ -1,5 +1,6 @@
 (ns zoetrope.core
-    (:require [com.rpl.specter :as s]))
+    (:require [com.rpl.specter :as s]
+              [zoetrope.components :as c]))
 
 ;;TODO cross compile this
 
@@ -23,6 +24,9 @@
   (animate (fn tick [t]
              (f)
              (animate tick))))
+
+(defn resolve [components main]
+  (partial c/resolve components main))
 
 (defn run-io [f inputs outputs]
   (frame-loop #(step f inputs outputs)))
