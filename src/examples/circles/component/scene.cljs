@@ -1,5 +1,6 @@
 (ns examples.circles.component.scene
-  (:require [examples.circles.component.impl.view.stage :as stage]))
+  (:require [zoetrope.component :refer [|]]
+            [examples.circles.component.impl.view.stage :as stage]))
 
 
 ;;;TODO paramerterized model access
@@ -24,7 +25,25 @@
 ;; assign animation curves to svg elements
 ;; update position
 
+;;TODO think of graph -> intercomponent communication
+
+(defn circle []
+  [[]]) ;;TODO
+
+;; Advantages of vector syntax
+;;   no need to pull out io/components
+;;       :<in, :>out are handled by the resolve function
+;;   no need to explicitly pass the inputs for each function
+;;      :<in :>out allow for data access
+;;   automatic separation of :<out data
+;;      :>out/model [:>out/dom ...] [:>out/canvas ...] [:>out/model ...] ;;will only take the out model and give runtime warning
+;; will give runtime warning if :<out is on the left hand side
+;; will give runtime warning if :<in is on the right hand side
+;; like spreadsheets
 (defn component [n]
-  [[:width :<in/canvas]
-   [:stage (stage/component)]
-   [:circles [(circle/component {:x 1 :y 2 :z})]]]) 
+  [[stage/component ;; :. => identity keyword function  - do not do anything
+    [:>out/dom [circle {:x 1 :y 2 :z :<in/dom}]]
+    [circle {:x :<in/model/x :y 2 :z}] 
+    [circle {:x 1 :y 2 :z}] 
+    [circle {:x 1 :y 2 :z}]]]) 
+

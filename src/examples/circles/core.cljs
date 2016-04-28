@@ -11,7 +11,7 @@
 (enable-console-print!)
 
 (z/run-io
-  (z/resolve scene) 
+  (z/resolve scene/component) 
   {:window (io.window/component)
    :dom (io.dom/component)
    :canvas (io.canvas/component)

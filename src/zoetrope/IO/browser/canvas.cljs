@@ -100,7 +100,7 @@
    (let [store (atom nil)
          width (atom nil)
          height (atom nil)]
-     (fn [{:keys [canvas]}]
+     (fn [input]
        (when-let [elem (dom/getElement canvas-id)]
              (let [context (.getContext elem "2d")
                    width' (.-width elem) 
@@ -118,4 +118,4 @@
 
 (defn component [canvas-id props]
   (let [renderer (create-renderer canvas-id props)]
-    {::output renderer}))
+    {:>out renderer}))

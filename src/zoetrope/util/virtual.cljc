@@ -13,4 +13,8 @@
            [(a :guard map?) b]                      (f tag a b)
            [(a :guard vector?) & b]                 (f tag {} (render-child (cons a b)))
            [a]                                      (f tag {} a)
-           :else                                    :no-match))) 
+           :else                                    :no-match)))
+
+;;TODO compile transform
+(defn walk [f data] 
+  (s/transform (s/walker) f data))

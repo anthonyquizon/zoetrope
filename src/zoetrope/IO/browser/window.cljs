@@ -16,6 +16,6 @@
 (defn component []
   (events/removeAll js/window)
   (let [mouse-fn (mouse-input)]
-    {::input (fn []
+    {:<in (fn [
                {:mouse (mouse-fn)
-                :dimensions (dimensions)})}))
+                :dimensions (dimensions)}])}))
