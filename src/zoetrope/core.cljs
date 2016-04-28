@@ -1,6 +1,5 @@
 (ns zoetrope.core
-    (:require [com.rpl.specter :as s]
-              [zoetrope.components :as c]))
+    (:require [com.rpl.specter :as s]))
 
 ;;TODO cross compile this
 
@@ -25,8 +24,17 @@
              (f)
              (animate tick))))
 
-(defn resolve [components main]
-  (partial c/resolve components main))
+;; Data request up
+  ;; run function
+(defn resolve [components]
+  (fn [inputs]
+    ;;if map and has component keyword
+    ;;for each components
+      ;; get its requested data
+        ;; run with requested data
+        ;; for any output of components
+           ;; repeat
+    (s/transform)))
 
 (defn run-io [f inputs outputs]
   (frame-loop #(step f inputs outputs)))

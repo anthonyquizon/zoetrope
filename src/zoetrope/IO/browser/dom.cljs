@@ -1,7 +1,7 @@
 (ns zoetrope.IO.browser.dom
   (:require [goog.dom :as dom]
             [goog.events :as events]
-            [zoetrope.IO.impl.virtual :as v]
+            [zoetrope.util.virtual :as v]
             [cljsjs.virtual-dom]))
 
 (defonce tree (atom (js/virtualDom.VText. "")))
@@ -23,3 +23,7 @@
           (reset! store dom)
           (swap! root js/virtualDom.patch patches))))))
 
+
+(defn component [] 
+  {;;TODO input -> events
+   ::output renderer}) 

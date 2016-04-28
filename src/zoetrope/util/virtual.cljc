@@ -2,6 +2,8 @@
   #?(:clj  (:require [clojure.core.match :refer [match]]))
   #?(:cljs (:require [cljs.core.match :refer-macros [match]])))
 
+
+;;TODO use spectre to walk
 (defn render [f [tag & body]] 
   (let [render-child #(map (partial render f) %)]
     (match (vec body)

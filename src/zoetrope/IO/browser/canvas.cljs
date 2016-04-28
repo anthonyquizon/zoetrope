@@ -1,5 +1,5 @@
 (ns zoetrope.IO.browser.canvas
-  (:require [zoetrope.IO.impl.virtual :as v]
+  (:require [zoetrope.util.virtual :as v]
             [zoetrope.util.math :as math]
             [goog.dom :as dom])) 
 
@@ -83,27 +83,25 @@
 (defmethod transform :rotate [_ matrix {:keys [radians axis]}] 
   (math/rotate matrix radians axis))
 
-
 (defn render 
   ([context node] (render context (math/matrix) node))
   ([context matrix {:keys [tag attr children]}]
    (let [matrix' (transform tag matrix attr)]
      (draw tag context matrix' attr)
      (doseq [child children] 
-       ;(print (first child))
        (render context matrix' child)))))
 
 (defn clear-canvas [elem context colour width height]
   (draw :rectangle context (math/matrix) {:origin [0 0 0 1] :width width :height height :fill colour}))
 
-(defn renderer 
+(defn create-renderer 
   ([canvas-id] (renderer canvas-id {:clear-colour "white"}))
   ([canvas-id {:keys [clear-colour]}]
    (let [store (atom nil)
          width (atom nil)
          height (atom nil)]
      (fn [{:keys [canvas]}]
-       (when-let [elem (dom/getElement canvas-id)] ;;TODO check if canvas exists
+       (when-let [elem (dom/getElement canvas-id)]
              (let [context (.getContext elem "2d")
                    width' (.-width elem) 
                    height' (.-height elem)] 
@@ -118,3 +116,6 @@
                    (reset! width width')
                    (reset! height height')))))))))
 
+(defn component [canvas-id props]
+  (let [renderer (create-renderer canvas-id props)]
+    {::output renderer}))
